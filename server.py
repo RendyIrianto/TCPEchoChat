@@ -1,4 +1,5 @@
 import socket 
+import threading 
 
 HOST = "127.0.0.1" 
 
@@ -19,9 +20,8 @@ server.bind((HOST, PORT))
 server.listen()
 
 print("Server is listening...")
-conn, addr = server.accept()
-print("Connected by", addr)
 
-
-conn.close()
-server.close()
+while True:
+    conn, addr = server.accept()
+    thread = threading.Thread(target=handle_client, args=(conn, addr))
+    thread.start()
