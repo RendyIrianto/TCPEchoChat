@@ -1,18 +1,26 @@
-# TCP Echo Client
+# TCP Echo Chat
 
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Python](https://img.shields.io/badge/language-Python-blue)
+A simple multi-client chat app using Python sockets.
 
-A simple TCP Echo Client written in Python for testing basic client-server communication.
+## How to Use
 
-## Features
+1. Start the server:
+   ```bash
+   python3 server.py
+Start a client (in another terminal):
 
-- Connects to a TCP server
-- Sends messages and receives echoed responses
-- Gracefully handles exit condition
+bash
+Copy
+Edit
+python3 client.py
+Enter your name and chat. Messages are broadcast to everyone.
 
-## Installation
+Type exit (or /exit or /quit) to leave.
+Press Ctrl+C in the server terminal to stop the server.
 
-```bash
-git clone https://github.com/RendyIrianto/TCPEchoChat.git
-cd TCPEchoChat
+Notes
+Default host: 127.0.0.1
+
+Default port: 65432
+
+Run the server first, then connect clients.
