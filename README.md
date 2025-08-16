@@ -1,4 +1,4 @@
-````markdown
+markdown
 # TCP Echo Chat
 
 A simple multi-client chat app using Python sockets.
@@ -8,7 +8,6 @@ A simple multi-client chat app using Python sockets.
 1. Start the server:
    ```bash
    python3 server.py
-````
 
 2. Start a client (in another terminal):
 
