@@ -1,46 +1,63 @@
-import socket 
-import threading 
+import socket
+import threading
+import sys
 
-HOST = "127.0.0.1" 
-
+HOST = "127.0.0.1"
 PORT = 65432
 
-clients = []
+stop_event = threading.Event()
 
-def handle_client(conn, addr):
+def recv_loop(sock: socket.socket) -> None:
     try:
-        print(f"New connection from {addr}")
-        while True:
-            name = conn.recv(1024).decode
-            print(name)
-            if not name:
+        while not stop_event.is_set():
+            data = sock.recv(1024)
+            if not data:
+                print("\n[Disconnected by server]")
+                stop_event.set()
                 break
-            conn.sendall(name)
-
+            print(data.decode(), end="")
     except Exception as e:
-        print(f"Error occurred: {e}")
+        if not stop_event.is_set():
+            print(f"\n[Receive error: {e}]")
+        stop_event.set()
 
-    finally:
-        clients.remove(conn)
-        conn.close()
-        print(f"Connection with {addr} closed")
+def main() -> None:
+    name = input("Enter your name: ").strip() or "Anonymous"
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            s.connect((HOST, PORT))
+        except Exception as e:
+            print(f"[Failed to connect to {HOST}:{PORT}: {e}]")
+            sys.exit(1)
 
+        try:
+            s.sendall(name.encode())
+        except Exception as e:
+            print(f"[Failed to send name: {e}]")
+            return
 
+        t = threading.Thread(target=recv_loop, args=(s,), daemon=True)
+        t.start()
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
-server.listen()
+        try:
+            while not stop_event.is_set():
+                msg = input()
+                if msg.strip().lower() in {"exit", "/exit", "/quit"}:
+                    stop_event.set()
+                    break
+                try:
+                    s.sendall((msg + "\n").encode())
+                except Exception as e:
+                    print(f"[Send error: {e}]")
+                    stop_event.set()
+                    break
+        except KeyboardInterrupt:
+            stop_event.set()
+        finally:
+            try:
+                s.shutdown(socket.SHUT_RDWR)
+            except Exception:
+                pass
 
-print("Server is listening...")
-
-try:
-    while True:
-        conn, addr = server.accept()
-        clients.append(conn)
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
-        thread.start()
-        print(clients)
-        
-except KeyboardInterrupt:
-    print("\nShutting down server...")
-    server.close()
+if __name__ == "__main__":
+    main()
