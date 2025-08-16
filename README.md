@@ -1,3 +1,4 @@
+````markdown
 # TCP Echo Chat
 
 A simple multi-client chat app using Python sockets.
@@ -7,20 +8,22 @@ A simple multi-client chat app using Python sockets.
 1. Start the server:
    ```bash
    python3 server.py
-Start a client (in another terminal):
+````
 
-bash
-Copy
-Edit
-python3 client.py
-Enter your name and chat. Messages are broadcast to everyone.
+2. Start a client (in another terminal):
 
-Type exit (or /exit or /quit) to leave.
-Press Ctrl+C in the server terminal to stop the server.
+   ```bash
+   python3 client.py
+   ```
 
-Notes
-Default host: 127.0.0.1
+3. Enter your name and chat. Messages are broadcast to everyone.
 
-Default port: 65432
+4. Type `exit` (or `/exit` or `/quit`) to leave.
+   Press `Ctrl+C` in the server terminal to stop the server.
 
-Run the server first, then connect clients.
+## Notes
+
+* Default host: `127.0.0.1`
+* Default port: `65432`
+* Run the server first, then connect clients.
+
